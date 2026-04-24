@@ -1,3 +1,4 @@
+import os
 import pygame
 import sys
 
@@ -19,8 +20,37 @@ GRAY = (200, 200, 200)
 HOVER_COLOR = (100, 150, 255)
 
 # フォント
-font_large = pygame.font.Font(None, 48)
-font_medium = pygame.font.Font(None, 36)
+def load_font(size):
+    """プロジェクトに日本語フォントがあればそれを使い、無ければシステムの日本語フォントを試す。"""
+    # 優先してプロジェクト内のフォントファイルを探す
+    candidates = [
+        "NotoSansJP-Regular.otf",
+        "NotoSansJP-Regular.ttf",
+        "NotoSansJP-Medium.otf",
+    ]
+    for name in candidates:
+        path = os.path.join(os.path.dirname(__file__), name)
+        if os.path.exists(path):
+            try:
+                return pygame.font.Font(path, size)
+            except Exception:
+                pass
+
+    # システムフォント候補（Windowsを想定）
+    sys_candidates = ["Meiryo", "Yu Gothic", "MS Gothic", "MS UI Gothic", "Noto Sans JP"]
+    for s in sys_candidates:
+        try:
+            f = pygame.font.SysFont(s, size)
+            if f:  # SysFont は必ずフォントオブジェクトを返すが念のため
+                return f
+        except Exception:
+            continue
+
+    # 最後の手段でデフォルト
+    return pygame.font.Font(None, size)
+
+font_large = load_font(48)
+font_medium = load_font(36)
 
 # ボタンクラス
 class Button:
@@ -82,22 +112,22 @@ def go_to_screen3():
     current_screen = screen3
 
 # スクリーン定義
-screen1 = Screen("Screen 1")
+screen1 = Screen("画面1")
 screen1.buttons = [
-    Button(300, 200, 200, 60, "Go to Screen 2", go_to_screen2),
-    Button(300, 300, 200, 60, "Go to Screen 3", go_to_screen3),
+    Button(300, 200, 200, 60, "画面2へ", go_to_screen2),
+    Button(300, 300, 200, 60, "画面3へ", go_to_screen3),
 ]
 
-screen2 = Screen("Screen 2")
+screen2 = Screen("画面2")
 screen2.buttons = [
-    Button(300, 200, 200, 60, "Back to Screen 1", go_to_screen1),
-    Button(300, 300, 200, 60, "Go to Screen 3", go_to_screen3),
+    Button(300, 200, 200, 60, "画面1へ戻る", go_to_screen1),
+    Button(300, 300, 200, 60, "画面3へ", go_to_screen3),
 ]
 
-screen3 = Screen("Screen 3")
+screen3 = Screen("画面3")
 screen3.buttons = [
-    Button(300, 200, 200, 60, "Back to Screen 1", go_to_screen1),
-    Button(300, 300, 200, 60, "Back to Screen 2", go_to_screen2),
+    Button(300, 200, 200, 60, "画面1へ戻る", go_to_screen1),
+    Button(300, 300, 200, 60, "画面2へ戻る", go_to_screen2),
 ]
 
 current_screen = screen1
