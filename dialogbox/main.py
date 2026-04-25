@@ -208,3 +208,5 @@ while running:
 # 終了処理: Pygame を終了してプロセスをクリーンに終了する
 pygame.quit()
 sys.exit()
+
+# https://fonts.google.com/noto/specimen/Noto+Sans+JP
