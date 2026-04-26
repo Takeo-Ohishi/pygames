@@ -82,44 +82,26 @@ player2 = MovingObject(
 )
 
 # ------------------ メインループ ------------------
-clock = pygame.time.Clock()
-running = True
+clock = pygame.time.Clock()     # フレームレート制御用の Clock を作ります
+running = True                  # ゲームを続けるかどうかのフラグ
 
 while running:
     clock.tick(60)  # 60FPS
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    for event in pygame.event.get():    # イベント処理
+        if event.type == pygame.QUIT:   # ウィンドウの「閉じる」ボタンが押されたら終了フラグを立てる
+            running = False             # これでループを抜けてゲームが終了します
 
     # 押されているキーの状態を一度取得して各インスタンスに渡す
-    keys = pygame.key.get_pressed()
-    player1.handle_input(keys)
-    player2.handle_input(keys)
-
-    # 画面外に出ないように簡単な制限（画面端で止める）
-    for p in (player1, player2):
-        if p.rect.x < 0:
-            p.rect.x = 0
-        if p.rect.y < 0:
-            p.rect.y = 0
-        if p.rect.x + p.rect.width > 800:
-            p.rect.x = 800 - p.rect.width
-        if p.rect.y + p.rect.height > 600:
-            p.rect.y = 600 - p.rect.height
+    keys = pygame.key.get_pressed()     # これで全キーの状態がわかります（True/False のリスト）
+    player1.handle_input(keys)  # player1 は矢印キーで動く
+    player2.handle_input(keys)  # player2 は WASD で動く
 
     # 描画
     screen.fill((0, 0, 0))  # 背景を黒で消す
-    player1.draw(screen)
-    player2.draw(screen)
+    player1.draw(screen)    # player1 を描画
+    player2.draw(screen)    # player2 を描画
 
-    # 説明テキストを少し表示（初心者用のヒント）
-    font = pygame.font.SysFont(None, 24)
-    text1 = font.render('Player1: Arrow keys', True, (255, 255, 255))
-    text2 = font.render('Player2: WASD', True, (255, 255, 255))
-    screen.blit(text1, (10, 10))
-    screen.blit(text2, (10, 30))
+    pygame.display.update() # 変更内容を画面に反映します（ダブルバッファの入れ替え）
 
-    pygame.display.update()
-
-pygame.quit()
+pygame.quit()   # ループを抜けたら Pygame を終了してリソースを解放します。
