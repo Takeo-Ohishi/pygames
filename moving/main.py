@@ -69,16 +69,8 @@ while running:
         player_rect.y += 5
 
     # ------------------ 描画処理 ------------------
-    # まず画面全体を塗りつぶして前のフレームの残像を消します。
-    # 引数は RGB のタプルで、ここでは黒にしています。
-    screen.fill((0, 0, 0))  # 黒背景
+    screen.fill((0, 0, 0))  # 背景を黒で消す
+    pygame.draw.rect(screen, player_color, player_rect) # プレイヤー（四角形）を描画します。引数は (画面, 色, 矩形)
+    pygame.display.flip()   # 変更内容を画面に反映します（ダブルバッファの入れ替え）
 
-    # プレイヤー（四角形）を描画します。
-    # 引数は (画面, 色, 矩形)
-    pygame.draw.rect(screen, player_color, player_rect)
-
-    # 変更内容を画面に反映します（ダブルバッファの入れ替え）
-    pygame.display.update()
-
-# ループを抜けたら Pygame を終了してリソースを解放します。
-pygame.quit()
+pygame.quit()   # ループを抜けたら Pygame を終了してリソースを解放します。

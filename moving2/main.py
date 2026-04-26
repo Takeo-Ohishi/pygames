@@ -102,6 +102,6 @@ while running:
     player1.draw(screen)    # player1 を描画
     player2.draw(screen)    # player2 を描画
 
-    pygame.display.update() # 変更内容を画面に反映します（ダブルバッファの入れ替え）
+    pygame.display.flip()   # 変更内容を画面に反映します（ダブルバッファの入れ替え）
 
 pygame.quit()   # ループを抜けたら Pygame を終了してリソースを解放します。
