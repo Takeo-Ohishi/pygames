@@ -1,84 +1,125 @@
 '''
-基本の移動ゲーム（初心者向けコメント付き）
+オブジェクト指向（クラスとインスタンス）で動く移動ゲームサンプル
 
-このスクリプトは Pygame を使って、矢印キーで四角（プレイヤー）を動かす
-とてもシンプルな例です。コメントを多めに入れているので、Pygame の
-基本的な流れ（初期化 → メインループ → 入力処理 → 描画 → 終了）が
-理解しやすくなっています。
+このファイルは「クラス」を使ってオブジェクトを定義し、
+そのクラスから複数のインスタンス（実体）を作って動かす例です。
 
-座標系の注意:
-- 画面の左上が (0, 0) で、x が右に増え、y が下に増えます。
-  （Scratch と異なり、Pygame の y 軸は下向きです）
+ポイント（初心者向け）:
+- クラスは「設計図」。同じ設計図から何個でもインスタンスを作れます。
+- インスタンスはそれぞれ独立した状態（位置や色など）を持ちます。
+- メソッドはそのオブジェクトができる操作（例: move, draw）です。
 '''
 
 import pygame
 
-# Pygame の初期化。これを呼ばないと Pygame の機能は使えません。
+# ------------------ 単一クラス構成（初心者向けにフラット化） ------------------
+class MovingObject:
+    """移動するオブジェクトの単純なクラス（初心者向け）
+
+    このクラスは「設計図」と「操作」を一つにまとめています。
+    - インスタンスは位置や色、速度を持つ
+    - 自分でキー入力を処理できる（controls を持つ）
+
+        各操作キーは個別の属性（flat な変数）で渡します。例:
+            key_left=pygame.K_LEFT, key_right=pygame.K_RIGHT, key_up=pygame.K_UP, key_down=pygame.K_DOWN
+    """
+
+    def __init__(self, x, y, width, height, color,
+                 key_left, key_right, key_up, key_down, speed=5):
+        # 状態（属性）を初期化
+        # Rect で位置とサイズをまとめて扱います（x, y は左上の座標）
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color = color
+        self.speed = speed
+        # フラットなキー属性（必ず指定してください）
+        self.key_left = key_left
+        self.key_right = key_right
+        self.key_up = key_up
+        self.key_down = key_down
+
+    def move(self, dx, dy):
+        """相対移動: dx, dy 分だけ位置を変える"""
+        self.rect.x += dx
+        self.rect.y += dy
+
+    def handle_input(self, keys):
+        """自分の controls を見てキーが押されていたら移動する"""
+        dx = dy = 0
+        if keys[self.key_left]:
+            dx -= self.speed
+        if keys[self.key_right]:
+            dx += self.speed
+        if keys[self.key_up]:
+            dy -= self.speed
+        if keys[self.key_down]:
+            dy += self.speed
+        self.move(dx, dy)
+
+    def draw(self, screen):
+        """画面に自分を四角で描画する"""
+        pygame.draw.rect(screen, self.color, self.rect)
+
+# ------------------ Pygame 初期化 ------------------
 pygame.init()
-
-# ------------------ 画面設定 ------------------
-# 画面サイズを幅800、高さ600で作成します。
 screen = pygame.display.set_mode((800, 600))
-# ウィンドウのタイトル（キャプション）を設定します。
-pygame.display.set_caption("Rect move sample")
+pygame.display.set_caption("Move Sample - 2 Objects")
 
-# ------------------ プレイヤー設定 ------------------
-# プレイヤーは四角（Rect）で表現します。
-# Rect(x, y, width, height)
-# ここでの x, y は矩形の左上の座標です。
-player_rect = pygame.Rect(400, 300, 50, 50)  # x, y, 幅, 高さ
-# プレイヤーの色は RGB タプルで指定します。
-player_color = (0, 128, 255)  # 水色っぽい色
+# ------------------ インスタンス作成 ------------------
+# ここでクラス（設計図）からインスタンス（実体）を2つ作ります。
 
-# ------------------ メインループ準備 ------------------
-# フレームレート制御用の Clock を作ります。
-clock = pygame.time.Clock()
-# ゲームを続けるかどうかのフラグ
-running = True
+# 矢印キーで動くプレイヤー（青）
+player1 = MovingObject(
+    100, 100, 50, 50, (0, 128, 255),
+    pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN,
+    speed=5
+)
+
+# WASD で動くプレイヤー（緑）
+player2 = MovingObject(
+    300, 200, 50, 50, (0, 200, 100),
+    pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s,
+    speed=5
+)
 
 # ------------------ メインループ ------------------
+clock = pygame.time.Clock()
+running = True
+
 while running:
-    # ここで毎フレームの上限 FPS を設定します（60 FPS に制限）。
-    # これにより処理速度がマシン依存になりにくくなります。
     clock.tick(60)  # 60FPS
 
-    # ------------------ イベント処理 ------------------
-    # Pygame ではキーボードやマウス、ウィンドウ操作などの
-    # イベントをイベントキューから取り出して処理します。
     for event in pygame.event.get():
-        # ウィンドウの「閉じる」ボタンが押されたら終了フラグを立てる
         if event.type == pygame.QUIT:
             running = False
 
-    # ------------------ キー入力（連続判定） ------------------
-    # pygame.key.get_pressed() は全キーの押下状態を返します。
-    # これを使うとキーを押し続けたときに連続して移動できます。
+    # 押されているキーの状態を一度取得して各インスタンスに渡す
     keys = pygame.key.get_pressed()
-    # 右矢印キーが押されていたら x を増やす（右へ移動）
-    if keys[pygame.K_RIGHT]:
-        player_rect.x += 5
-    # 左矢印キーが押されていたら x を減らす（左へ移動）
-    if keys[pygame.K_LEFT]:
-        player_rect.x -= 5
-    # 上矢印キーが押されていたら y を減らす（上へ移動）
-    # Pygame では y が下方向に増えるので上へ行くには減らす
-    if keys[pygame.K_UP]:
-        player_rect.y -= 5
-    # 下矢印キーが押されていたら y を増やす（下へ移動）
-    if keys[pygame.K_DOWN]:
-        player_rect.y += 5
+    player1.handle_input(keys)
+    player2.handle_input(keys)
 
-    # ------------------ 描画処理 ------------------
-    # まず画面全体を塗りつぶして前のフレームの残像を消します。
-    # 引数は RGB のタプルで、ここでは黒にしています。
-    screen.fill((0, 0, 0))  # 黒背景
+    # 画面外に出ないように簡単な制限（画面端で止める）
+    for p in (player1, player2):
+        if p.rect.x < 0:
+            p.rect.x = 0
+        if p.rect.y < 0:
+            p.rect.y = 0
+        if p.rect.x + p.rect.width > 800:
+            p.rect.x = 800 - p.rect.width
+        if p.rect.y + p.rect.height > 600:
+            p.rect.y = 600 - p.rect.height
 
-    # プレイヤー（四角形）を描画します。
-    # 引数は (画面, 色, 矩形)
-    pygame.draw.rect(screen, player_color, player_rect)
+    # 描画
+    screen.fill((0, 0, 0))  # 背景を黒で消す
+    player1.draw(screen)
+    player2.draw(screen)
 
-    # 変更内容を画面に反映します（ダブルバッファの入れ替え）
+    # 説明テキストを少し表示（初心者用のヒント）
+    font = pygame.font.SysFont(None, 24)
+    text1 = font.render('Player1: Arrow keys', True, (255, 255, 255))
+    text2 = font.render('Player2: WASD', True, (255, 255, 255))
+    screen.blit(text1, (10, 10))
+    screen.blit(text2, (10, 30))
+
     pygame.display.update()
 
-# ループを抜けたら Pygame を終了してリソースを解放します。
 pygame.quit()
