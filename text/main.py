@@ -13,13 +13,20 @@ def get_jp_font(size):
     except:
         pass
 
-    # 2. Linux（Chromebook）の NotoSansCJKjp を試す
+    # 2. あえて、Linux（Chromebook）の NotoSansCJKjp をファイル名で試す
     try:
-        return pygame.font.SysFont("NotoSansCJKjp", size)
+        return pygame.font.SysFont("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc", size)
     except:
         pass
 
-    # 3. 最後のフォールバック（日本語は豆腐になる可能性あり）
+    # 3. Linux（Chromebook）の NotoSansCJKjp を試す
+    try:
+        pass
+        # return pygame.font.SysFont("NotoSansCJKjp", size)
+    except:
+        pass
+
+    # 4. 最後のフォールバック（日本語は豆腐になる可能性あり）
     return pygame.font.SysFont(None, size)
 
 font = get_jp_font(24)
