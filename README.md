@@ -26,6 +26,8 @@ git pull
 ```
 
 ## スタッシュ＆プル：修正中のファイルをスタッシュ（一旦退避）して、github のリポジトリから最新状態を取得更新し、そして退避したファイルを戻す
+
+Please commit your changes or stash them before you merge.
 ```
 git stash
 git pull
