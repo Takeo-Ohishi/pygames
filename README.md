@@ -10,6 +10,11 @@ pwd      <== 現在のディレクトリを表示
 ls       <== ファイル一覧を表示
 ```
 
+## pygame モジュールのインストール
+```
+pip install pygame
+```
+
 ## クローン：github のリポジトリ（プロジェクト）を自分の端末にコピーする
 ```
 git clone https://github.com/jcodeorg/pygames
