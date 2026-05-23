@@ -28,46 +28,9 @@ HOVER_COLOR = (100, 150, 255)  # マウスが乗ったときの色
 
 # ====== フォント読み込みのヘルパー ======
 def load_font(size):
-    """
-    指定したサイズのフォントを返す関数。
-    - まずプロジェクトフォルダにある日本語フォントを探す。
-    - なければシステムの日本語フォント候補を順に試す。
-    - それでも無ければ Pygame のデフォルトフォントを使う。
-
-    初心者向けのポイント:
-    フォントは日本語を表示するために重要です。日本語が文字化けする場合、
-    プロジェクト内に日本語対応フォント（例: NotoSansJP）を置くと確実です。
-    """
-
-    # プロジェクト内にあるフォントファイル名の候補
-    candidates = [
-        "NotoSansJP-Regular.otf",
-        "NotoSansJP-Regular.ttf",
-        "NotoSansJP-Medium.otf",
-    ]
-
-    # この Python ファイルと同じディレクトリにフォントファイルがあれば使う
-    for name in candidates:
-        path = os.path.join(os.path.dirname(__file__), name)
-        if os.path.exists(path):
-            try:
-                return pygame.font.Font(path, size)
-            except Exception:
-                # フォントが壊れていたり読み込めない場合は次へ
-                pass
-
-    # システムに入っている日本語フォントを順に試す（Windows 想定）
-    sys_candidates = ["Meiryo", "Yu Gothic", "MS Gothic", "MS UI Gothic", "Noto Sans JP"]
-    for s in sys_candidates:
-        try:
-            f = pygame.font.SysFont(s, size)
-            if f:
-                return f
-        except Exception:
-            continue
-
-    # どれも無ければ Pygame のデフォルトフォントを返す
-    return pygame.font.Font(None, size)
+    """同ディレクトリの NotoSansJP-Regular.ttf を読み込んで返す。"""
+    path = os.path.join(os.path.dirname(__file__), "NotoSansJP-Regular.ttf")
+    return pygame.font.Font(path, size)
 
 
 # よく使うフォントを作っておく（大・中サイズ）
