@@ -12,6 +12,7 @@
 '''
 
 import pygame
+import os
 
 # Pygame の初期化。これを呼ばないと Pygame の機能は使えません。
 pygame.init()
@@ -26,10 +27,14 @@ pygame.display.set_caption("Rect move sample")
 # プレイヤーは四角（Rect）で表現します。
 # Rect(x, y, width, height)
 # ここでの x, y は矩形の左上の座標です。
-player_rect = pygame.Rect(400, 300, 50, 50)  # x, y, 幅, 高さ
+# player_rect = pygame.Rect(400, 300, 50, 50)  # x, y, 幅, 高さ
 # プレイヤーの色は RGB タプルで指定します。
-player_color = (0, 128, 255)  # 水色っぽい色
-
+# player_color = (0, 128, 255)  # 水色っぽい色
+BASE_DIR = os.path.dirname(__file__)
+image = pygame.image.load(os.path.join(BASE_DIR, "costume1.png")).convert_alpha()  # プレイヤーの画像を読み込みます。
+image = pygame.transform.scale(image, (50, 50))  # 画像を 50x50 にリサイズします。
+player_rect = image.get_rect()  # 画像のサイズに合わせた Rect を作ります。
+player_rect.center = (400, 300)  # プレイヤーを画面の中心に配置します。
 # ------------------ メインループ準備 ------------------
 # フレームレート制御用の Clock を作ります。
 clock = pygame.time.Clock()
@@ -70,7 +75,7 @@ while running:
 
     # ------------------ 描画処理 ------------------
     screen.fill((0, 0, 0))  # 背景を黒で消す
-    pygame.draw.rect(screen, player_color, player_rect) # プレイヤー（四角形）を描画します。引数は (画面, 色, 矩形)
+    screen.blit(image, player_rect)  # プレイヤー（画像）を描画します。
     pygame.display.flip()   # 変更内容を画面に反映します（ダブルバッファの入れ替え）
 
 pygame.quit()   # ループを抜けたら Pygame を終了してリソースを解放します。
