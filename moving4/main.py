@@ -15,9 +15,9 @@ import pygame
 import os
 import sys
 
-class Cat(pygame.sprite.Sprite):
+# ここにclassを定義する
     def __init__(self, frames):
-        super().__init__()
+# ここにも追加する
         self.frames = frames  # アニメーション用のフレームリスト
         self.frame_index = 0  # 現在のフレームインデックス
         self.image = self.frames[self.frame_index]  # 最初のフレームを表示するため
@@ -70,9 +70,9 @@ def main():
     image2 = pygame.transform.scale(image2, (50, 50))  # 画像を 50x50 にリサイズします。
     frames = [image1, image2]  # アニメーション用のフレームリスト
 
-    cat = Cat(frames)  # Cat オブジェクトを作成
-    cats = pygame.sprite.Group()
-    cats.add(cat)
+# ここにネコを作成する
+# ネコグループを作成する
+# ネコをグループに追加する
 
 # ------------------ メインループ準備 ------------------
 # フレームレート制御用の Clock を作ります。
@@ -97,12 +97,12 @@ def main():
     # pygame.key.get_pressed() は全キーの押下状態を返します。
     # これを使うとキーを押し続けたときに連続して移動できます。
         keys = pygame.key.get_pressed()
-        cats.update(keys)
+    # ここでネコグループをupdateする
 
     # ------------------ 描画処理 ------------------
         screen.fill((255, 255, 255))  # 背景を白で消す
 
-        cats.draw(screen)  # プレイヤー（画像）を描画します。
+    # ネコグループを描画する
         
         pygame.display.flip()   # 変更内容を画面に反映します（ダブルバッファの入れ替え）
 
