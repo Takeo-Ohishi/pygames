@@ -147,7 +147,7 @@ def main():
     whitecats = pygame.sprite.Group()
     redcats = pygame.sprite.Group()
 
-    for _ in range(1):  # プレイヤーを複数作る
+    for _ in range(3):  # プレイヤーを複数作る
         cat = WhiteCat(frames)  # WhiteCat オブジェクトを作成
         cats.add(cat)
         whitecats.add(cat)
