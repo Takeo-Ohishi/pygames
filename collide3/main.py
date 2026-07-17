@@ -32,7 +32,6 @@ class WhiteCat(pygame.sprite.Sprite):
         self.animation_timer = 0  # アニメーションのタイマー
         self.animation_speed = 2  # アニメーションの速度（フレーム数）
         self.dragging = False
-        self.drag_offset = (0, 0)
 
     def update(self, keys):
         if self.dragging:
@@ -175,14 +174,16 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
                 for cat in whitecats:
-                    cat.handle_mouse_down(event.pos)
+                    cat.handle_mouse_down(pos)
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 for cat in whitecats:
                     cat.handle_mouse_up()
-            elif event.type == pygame.MOUSEMOTION:
-                for cat in whitecats:
-                    cat.handle_mouse_motion(event.pos)
+    
+        pos = pygame.mouse.get_pos()
+        for cat in whitecats:
+            cat.handle_mouse_motion(pos)
 
     # ------------------ キー入力（連続判定） ------------------
     # pygame.key.get_pressed() は全キーの押下状態を返します。
