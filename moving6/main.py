@@ -51,24 +51,20 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # 左クリック
-                # マウスの座標がキャラの四角形（rect）の中にあるか判定
-                if player_rect.collidepoint(event.pos):
-                    is_dragging = True
-                    # クリック位置とキャラの左上のズレを計算して保存
-                    mouse_x, mouse_y = event.pos
-                    offset_x = player_rect.x - mouse_x
-                    offset_y = player_rect.y - mouse_y
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:  # 左ボタンが離されたらドラッグ終了
-                is_dragging = False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # 左クリック            if event.button == 1:  # 左クリック
+            # マウスの座標がキャラの四角形（rect）の中にあるか判定
+            if player_rect.collidepoint(event.pos):
+                is_dragging = True
+                # クリック位置とキャラの左上のズレを計算して保存
+                mouse_x, mouse_y = event.pos
+                offset_x, offset_y = player_rect.x - mouse_x, player_rect.y - mouse_y
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:  # 左ボタンが離されたらドラッグ終了
+            is_dragging = False
 
     if is_dragging:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         # ズレ（offset）を維持したまま移動させることで、ワープを防ぐ
-        player_rect.x = mouse_x + offset_x
-        player_rect.y = mouse_y + offset_y
+        player_rect.x, player_rect.y = mouse_x + offset_x, mouse_y + offset_y
 
     # ------------------ 描画処理 ------------------
     screen.fill((0, 0, 0))  # 背景を黒で消す
