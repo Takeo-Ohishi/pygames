@@ -28,23 +28,37 @@ MAX_FALL_SPEED = 12
 GOAL_WIDTH = 50
 GOAL_HEIGHT = 50
 
+# マップの設定
+MAP_WIDTH = 2500
+MAP_HEIGHT = SCREEN_HEIGHT
+
 # プレイヤーの画像ファイル
 BASE_DIR = os.path.dirname(__file__)
 PLAYER_IMG_PATH1 = os.path.join(BASE_DIR, "costume1.png")
 PLAYER_IMG_PATH2 = os.path.join(BASE_DIR, "costume2.png")
 
 # 足場の配置（横に長いステージ）
+# 足場のデータは (x, y, width, height) の形式で定義
+# 足場の数や配置を変更してみよう
+
 platforms_data = [
-    (0, SCREEN_HEIGHT - 40, 2500, 40), # 長い地面
+    (0, SCREEN_HEIGHT - 40, MAP_WIDTH, 40), # 長い地面
     (150, 450, 100, 20),
-    (350, 350, 100, 20),
-    (550, 250, 150, 20),
-    (800, 400, 100, 20),
-    (1050, 300, 200, 20),
-    (1350, 200, 100, 20),
-    (1550, 250, 150, 20),
-    (1800, 350, 150, 20)
+    (350, 450, 100, 20),
+    (550, 450, 150, 20),
+    (800, 450, 100, 20),
+    (1050, 450, 200, 20),
+    (1350, 450, 100, 20),
+    (1550, 450, 150, 20),
+    (1800, 450, 150, 20)
 ]
+
+# ゴールの配置
+# ゴールの位置は、マップの右端に配置する
+# ゴールの位置を変更して、プレイヤーが到達する距離を調整してみよう
+
+GOAL_X = MAP_WIDTH - GOAL_WIDTH - 50
+GOAL_Y = MAP_HEIGHT - GOAL_HEIGHT - 40
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -131,10 +145,7 @@ class Level:
             platform = Platform(*data)
             self.platforms.add(platform)
 
-        # ゴールの配置（遠くに設定）
-        goal_x = 2100
-        goal_y = 250 - GOAL_HEIGHT
-        self.goal.add(Goal(goal_x, goal_y))
+        self.goal.add(Goal(GOAL_X, GOAL_Y))
 
     def scroll_x(self):
         player = self.player
